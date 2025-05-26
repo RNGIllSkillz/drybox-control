@@ -1,10 +1,4 @@
 /***
- * Project: DryBoxControl
- * File   : DryBoxControl.h
- * Author : Werner Riemann 
- * Created: 18.10.2023
- * Board: Arduino Nano
- * 
  * Description: Controlling Filament DryBox
  * 
  * Pins:
@@ -20,7 +14,7 @@
 
 #include <Arduino.h>
 
-#define APP_VERSION "1.0"
+#define APP_VERSION "1.1"
 
 // Defines Pins
 #define FANAIR_PIN 9
@@ -30,10 +24,12 @@
 // Defines Mode selection -------------------------------------------
 #define SELMOD_DRYTEMP      1
 #define SELMOD_DRYTIME      2
-#define SELMOD_DRYSTART     3
-#define SELMOD_SAVE         4
-#define SELMOD_VERSION      5
-#define SELMOD_TESTING      6
+#define SELMOD_RPM          3
+#define SELMOD_DRYSTART     4
+#define SELMOD_SAVE         5
+#define SELMOD_VERSION      6
+#define SELMOD_TESTING      7
+
 
 // Defines Statemachine ----------------------------------------------
 #define AST_IDLE            0
@@ -42,6 +38,7 @@
 #define AST_MODE_SELECT     11
 
 #define AST_SET_DRYTEMP     20
+#define AST_SET_RPM         21
 
 #define AST_SET_DRYTIME     30
 #define AST_ED_DRYHOUR      31

@@ -1,22 +1,4 @@
 /***
- * Project: DryBox Control
- * File   : DryBoxControl.ino
- * Author : Werner Riemann 
- * Created: 18.10.2023
- * Board: Arduino Nano
- * 
- * Description: Controller for an active (heated) Filament DryBox.
- *              The Dryer contains a PTC Heater and a Fan for fresh dry air.
- *
- * Recommended drying temperatures:
- *    PLA, PLA+                : 40-45 degree
- *    ABS, ABS+,  PETG         : 45-50 degree
- *    PVA,PVB, ASA, TPU, PMMA  : 50-55 degree
- *
- *   Note: with one Heater, the box may barely reaches 55 degree. As max i reached 57 degree.
- *         I recommend not to go over 52-53 degree. If you need higher temperatures,
- *         install a second heater. The MosFet switch will manage this. But you
- *         also need a stronger power supply (12V, 8-10A).
  * 
  * Pins:
  * 
@@ -38,20 +20,6 @@
  * D11    - Analog out PWM Heating
  * D12    - 
  * D13    - Digital out LEDPIN 13 (interne LED)
- * 
- *
- * --- Menu and functions ---
- * Main select: Temperature, Time, Start, Save, Version, Test functions (press Rotary to choose)
- * Temperature: change value by rotate, press to Rotary to exit
- * Time       : choose hour, minutes or Ret to exit. Press Rotary to enter value to change. Press Rotary again to exit value change.
- * Start      : press Rotary to start drying. Press Rotary during drying to pause or exit drying
- * Save       : press Rotary to save current setting for temperature and time to eeprom
- * Version    : shows the current version, press Rotary again to return to main
- * Test       : provides 3 functions for Heater, Heater Fan, Air Fan for Fresh air supply and exit Test.
- *              On exit Test menu, all values are set to zero and stops all modules.
- *
- *              This is useful to check all modules separately after assembling modules. Keep in mind to don't power
- *              up the heater without the fan for a longer time.
  */
 
 #include <SPI.h>
@@ -66,8 +34,8 @@
 
 // defines for DHT11 Temp and Humitidy Sensor
 #define DHTPIN 8        // Digital pin connected to the DHT sensor
-#define DHTTYPE DHT11   // chose the DHT type you are using
-//#define DHTTYPE DHT22 
+//#define DHTTYPE DHT11   // chose the DHT type you are using
+#define DHTTYPE DHT22 
 
 // Define the tachometer pin
 #define FAN_PIN 3 // Pin where the fan's tachometer output is connected
@@ -95,8 +63,8 @@ int HeatFanSpeed = 50;    // HeatFan Speed in Percent
 int HeatingPower = 25;    // Heating Power in Percent
 
 int testAirFanSpeed = 0;    // Extract Fan Speed in Percent for testing mode
-int testHeatFanSpeed =0;    // HeatFan Speed in Percent for testing mode
-int testHeatingPower =0;    // Heating Power in Percent for testing mode
+int testHeatFanSpeed = 0;    // HeatFan Speed in Percent for testing mode
+int testHeatingPower = 0;    // Heating Power in Percent for testing mode
 
 // default values at startup, if nothing is stored in the eeprom
 int DryTemperature = 35;    // Destination Dry Temperature in degree celsius
@@ -307,30 +275,23 @@ void calculateRPM() {
 
 char* RollingMessage(boolean StateHeaterOn, boolean StateHeaterFanOn, boolean StateVentilationOn, boolean turboMode, int curDryTime_Hours, int curDryTime_Minutes)
 {
-    // Allocate enough memory for the buffer
-    char* buf = (char*)malloc(150);  // Adjust size as needed
+    static char buf[96]; 
+    buf[0] = '\0'; 
     
-    // Check for memory allocation failure
-    if (buf == NULL)
-    {
-        return NULL;
-    }
-    
-    // Create the initial message
-    sprintf(buf, " Heater: %s, Fan: %s, Vent: %s, Turbo: %s, Time: %02d:%02d",
-            (StateHeaterOn ? "On" : "Off"),
-            (StateHeaterFanOn ? "On" : "Off"),
-            (StateVentilationOn ? "On" : "Off"),
-            (turboMode ? "On" : "Off"),
+    snprintf(buf, sizeof(buf), "Heater: %s, Fan: %s, Vent: %s, Turbo: %s, Time: %02d:%02d ",
+            StateHeaterOn ? "On" : "Off",
+            StateHeaterFanOn ? "On" : "Off",
+            StateVentilationOn ? "On" : "Off",
+            turboMode ? "On" : "Off",
             curDryTime_Hours,
-            curDryTime_Minutes);    
+            curDryTime_Minutes);
+               
     if (tRPM != -1)
     {
-        char rpmBuf[20];
-        sprintf(rpmBuf, ", PTC FAN RPM = %d", rpm);
+        char rpmBuf[24];
+        sprintf(rpmBuf, ", PTC FAN RPM = %d, ", rpm);
         strcat(buf, rpmBuf);
     }
-    //Add more information if needed.    
     return buf;
 }
 
@@ -499,7 +460,7 @@ void loop() {
 
         if(encoderBUTTON_State == 1 && aktModeNo == SELMOD_RPM)  // encoder switch pressed, set RPM
         {
-          display.ScreenOut(SCR_SETRPM);
+          display.ScreenOut(SCR_SET_RPM);
           display.PrintDestRPM(tRPM, 0);
           display.CursorPos(1, 1);
           display.CursorOn();
@@ -644,10 +605,11 @@ void loop() {
           if (scrolMsg != NULL) 
           {
             display.DisScrollText(scrolMsg);
-            free(scrolMsg);
+            //free(scrolMsg);
           } 
-          else           
-            display.DisScrollText("Memory allocation failed");
+          else            
+            display.DisScrollText("Error: No memory");
+            //display.DisScrollText("Memory allocation failed");
           }
         
         if(runMinuteTimer > 0) {
@@ -970,6 +932,4 @@ void loop() {
         DryState = DST_RAMPUP_HEATER;
         break;        
    }
-
  }
-

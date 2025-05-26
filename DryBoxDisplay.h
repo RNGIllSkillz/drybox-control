@@ -1,11 +1,4 @@
-#include <stdint.h>
 /***
- * Project: DryBox Control
- * File   : DryBoxDisplayDisplay.h
- * Author : Werner Riemann 
- * Created: 18.10.2023
- * Board: Arduino Nano
- * 
  * Description: Modul for Display outputs
  * 
  * Pins:
@@ -15,6 +8,7 @@
  * 
  */
 
+#include <stdint.h>
 #include <Arduino.h>
 #include <LCD.h>
 #include <LiquidCrystal_I2C.h>
@@ -26,7 +20,7 @@
 #define SCR_MENUBASE    10      // Basenumber Menu
 #define SCR_SETTEMP     20      // Set temperature
 #define SCR_SETTIME     30      // Set dry time
-#define SCR_SETRPM      31      // Set threshold RPM
+#define SCR_SET_RPM     31      // Set threshold RPM
 #define SCR_ERROR       90
 
 #define SCR_RUNNING     40      // Show data for temperature and humidity

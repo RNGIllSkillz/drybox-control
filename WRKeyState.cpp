@@ -1,10 +1,4 @@
 /***
- * Project: Toolfunctions for Key input State
- * File   : WRKeyState.cpp
- * Author : Werner Riemann 
- * Created: 25.07.2022
- * Board: Arduino Nano
- * 
  * Description: Software debounce of input buttons
  * 
  * 

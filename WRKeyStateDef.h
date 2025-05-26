@@ -4,7 +4,7 @@
  */
 
 #ifndef _WRKEYSTATEDEF_H
-  #define _WRKEYSTATEDEF_H
+#define _WRKEYSTATEDEF_H
 
 #include <Arduino.h>
 

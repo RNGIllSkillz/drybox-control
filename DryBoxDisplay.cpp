@@ -1,11 +1,4 @@
-#include "Arduino.h"
 /***
- * Project: DryBox Control
- * File   : DryBoxDisplay.cpp
- * Author : Werner Riemann 
- * Created: 18.10.2023
- * Board: Arduino Nano
- * 
  * Description: Modul for Display outputs
  *
  * NOTE: this modul uses an old version of I2C LiquidCrytal lib called "NewliquidCrystal".
@@ -16,6 +9,7 @@
  * 
  */
 
+#include "Arduino.h"
 #include "DryBoxDisplay.h"
 
 LiquidCrystal_I2C lcd(0x27,2,1,0,4,5,6,7,3,POSITIVE);
@@ -296,7 +290,7 @@ void DryBoxDisplay::DisScrollText(const char* scrollMsg) {
 void DryBoxDisplay::ScreenOut(uint8_t uiScreenID)
 {
 lcd.clear();
-lcd.setCursor(0,0); // start ist immer oben links
+lcd.setCursor(0,0); 
 
 switch(uiScreenID) 
   {
@@ -305,7 +299,7 @@ switch(uiScreenID)
     break;
 
   case SCR_WELCOME:
-    lcd.print("-DryBox Control-");
+    lcd.print("---=IllBox=---");
     lcd.setCursor(0,1);
     lcd.print(szVersion);
     lcd.setCursor(4,1);
@@ -337,7 +331,7 @@ switch(uiScreenID)
     lcd.print("1:30  h:mm | RET");  
     break;
 
-  case SCR_SETRPM:
+  case SCR_SET_RPM:
     lcd.print("Set threshld RPM");
     lcd.setCursor(0,1);
     lcd.print("300    RPM | RET");  

@@ -1,10 +1,4 @@
 /***
- * Project: DryBox Control
- * File   : HeatingData.h
- * Author : Werner Riemann 
- * Created: 08.05.2024
- * Board: Arduino Nano
- * 
  * Description: Implementation of Class HeatingData
  *              Class for handling the values for heating power and heater fan speed
  *              depending on the different temperature ranges
